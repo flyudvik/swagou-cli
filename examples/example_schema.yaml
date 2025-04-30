@@ -1,0 +1,273 @@
+openapi: 3.0.0
+info:
+  title: Blog API
+  description: A simple blog API with users and posts
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+paths:
+  /api/users/:
+    get:
+      summary: List all users
+      tags:
+        - users
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new user
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/users/{user_id}/:
+    get:
+      summary: Get a user by ID
+      tags:
+        - users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    patch:
+      summary: Update a user
+      tags:
+        - users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Delete a user
+      tags:
+        - users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: User deleted successfully
+  /api/posts/:
+    get:
+      summary: List all posts
+      tags:
+        - posts
+      responses:
+        '200':
+          description: A list of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+    post:
+      summary: Create a new post
+      tags:
+        - posts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCreate'
+      responses:
+        '201':
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+  /api/posts/{slug}/:
+    get:
+      summary: Get a post by slug
+      tags:
+        - posts
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+    patch:
+      summary: Update a post
+      tags:
+        - posts
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUpdate'
+      responses:
+        '200':
+          description: Post updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+    delete:
+      summary: Delete a post
+      tags:
+        - posts
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Post deleted successfully
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - id
+        - username
+        - email
+    UserCreate:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        password:
+          type: string
+          format: password
+      required:
+        - username
+        - email
+        - password
+    UserUpdate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+        slug:
+          type: string
+          readOnly: true
+        content:
+          type: string
+        author:
+          $ref: '#/components/schemas/User'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - id
+        - title
+        - slug
+        - content
+        - author
+    PostCreate:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+      required:
+        - title
+        - content
+    PostUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
