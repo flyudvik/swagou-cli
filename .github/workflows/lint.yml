@@ -2,50 +2,50 @@ name: Lint
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install uv
-      run: |
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-        
-    - name: Cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cache/uv
-          ~/.uv
-        key: ${{ runner.os }}-uv-lint-${{ hashFiles('pyproject.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-uv-lint-
-          
-    - name: Install dependencies
-      run: |
-        uv pip install -e ".[dev]"
-        uv pip install black isort mypy
-        
-    - name: Run black
-      run: |
-        black --check swagou tests
-        
-    - name: Run isort
-      run: |
-        isort --check swagou tests
-        
-    - name: Run mypy
-      run: |
-        mypy swagou
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/uv
+            ~/.uv
+          key: ${{ runner.os }}-uv-lint-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-lint-
+
+      - name: Install dependencies
+        run: |
+          uv pip install -e ".[dev]"
+          uv pip install black isort mypy
+
+      - name: Run black
+        run: |
+          black --check swagou tests
+
+      - name: Run isort
+        run: |
+          isort --check swagou tests
+
+      - name: Run mypy
+        run: |
+          mypy swagou
