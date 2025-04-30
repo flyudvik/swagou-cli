@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
 
@@ -35,8 +35,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv pip install -e ".[dev]"
-          uv pip install black isort mypy
+          uv pip install --system -e ".[dev]"
 
       - name: Run black
         run: |
